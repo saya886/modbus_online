@@ -2,14 +2,125 @@
 <html>
 <head>
    <meta charset="utf-8"> 
-   <title>在线尝试 Bootstrap 实例</title>
+   <title>modbus</title>
    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div class="container" style="padding: 40px;">
 
-      <h1>Hello, world!</h1>
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="1">名称</label>
+        <input type="text" class="form-control" id="1"
+                placeholder="">
+    </div>
+    <div class="form-group">
+        <label for="2">名称</label>
+        <input type="text" class="form-control" id="2"
+                placeholder="">
+    </div>
+    <div class="form-group">
+        <label for="3">名称</label>
+        <input type="text" class="form-control" id="3"
+                placeholder="">
+    </div>
+    <div class="form-group">
+        <label for="4">名称</label>
+        <input type="text" class="form-control" id="4"
+                placeholder="">
+    </div>
+    <div class="form-group">
+        <label for="5">名称</label>
+        <input type="text" class="form-control" id="5"
+                placeholder="">
+    </div>
+    <div class="form-group">
+        <label for="6">名称</label>
+        <input type="text" class="form-control" id="6"
+                placeholder="">
+    </div>
+    <div class="form-group">
+        <label for="7">名称</label>
+        <input type="text" class="form-control" id="7"
+                placeholder="">
+    </div>
+    <div class="form-group">
+        <label for="8">名称</label>
+        <input type="text" class="form-control" id="8"
+                placeholder="">
+    </div>
+    
+    <button onclick="post_modbus_data_func()" type="submit" class="btn btn-default">设置</button>
+</div>
+
+<div class="col-md-6">
+    <h3>数值:<span id="data_value">123</span></h3>
+    <h4>时间:<span id="time_now"></span></h4>
+</div>
+</div>
+<script>
+    get_time_now_func = function(){
+        Date.prototype.Format = function (fmt) {
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "H+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            };
+
+
+            var time2 = new Date().Format("yyyy-MM-dd HH:mm:ss");
+            return time2
+    };
+    get_modbus_data_func = function () {
+        $.get("/modbus_view/modbus_method_01/",
+            function (data,status) {
+                if(data.status == "1"){
+                    $("#data_value").text(data.data);
+                    $("#time_now").text(get_time_now_func());
+                }
+                else {
+
+                }
+            })
+
+    };
+    var interval_func_id = setInterval(
+        function () {
+            get_modbus_data_func();
+        },1000
+    );
+    post_modbus_data_func = function () {
+        var data_obj = new Object();
+        data_obj.data = [];
+        for(var i=1;i<9;i++){
+            data_obj.data.push($("#"+String(i)).val());
+        }
+        $.post("/modbus_view/modbus_method_01/",
+        {
+            json_str:JSON.stringify(data_obj)
+        },
+            function (data,status) {
+                if(data.status == "1"){
+                    alert("设置成功"); 
+                }
+                
+                else {
+                    alert("设置失败");
+                }
+            })
+    };
+</script>
 
 </body>
 </html>
