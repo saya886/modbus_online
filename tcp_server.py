@@ -27,10 +27,10 @@ def tcplink(sock, addr):
         sensor_command = sensor_data.objects.get(id="1").data
         data = bytes.fromhex("".join(sensor_command.split(",")))
         print('连接建立完成  链接的地址 %s:%s...' % addr)
-        sock.send(data)
-        print("send data is  "+str(data))
         while True:
             print("--------------------------------------")
+            sock.send(data)
+            print("send data is >>> " + str(data))
             recv_data = sock.recv(1024)
             try:
                 data_history(value=int(recv_data.hex()[6:10],16)).save()
@@ -42,9 +42,9 @@ def tcplink(sock, addr):
                 print("can not parser data content")
             #if recv_data == b'':
             #    break
-            sock.send(recv_data)
-            print("send data is >>> "+str(recv_data))
-            time.sleep(10)
+            # sock.send(recv_data)
+            # print("send data is >>> "+str(recv_data))
+            time.sleep(5)
     except KeyboardInterrupt:
         sock.close()
         print('客户端 %s:%s 断开链接.' % addr)
