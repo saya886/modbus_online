@@ -1,0 +1,6 @@
+<form enctype="multipart/form-data" name="input" action="/modbus_view/upload_file/" method="post">
+    <input type="text" name="title" maxlength="50" required id="id_title">
+<input id="id_docfile" type="file" name="docfile"/>
+<input type="submit" value="Submit">
+{% csrf_token %}
+</form>
